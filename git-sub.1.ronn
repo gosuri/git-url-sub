@@ -1,0 +1,15 @@
+git-subsitute(1) - a git subsitution tool
+=========================================
+
+## SYNOPSIS
+
+git-subsitute url _old_url_ _new_url_
+
+## DESCRIPTION
+
+'git-subsitute' is a tool to replace remote urls for multiple git repositories recursively
+
+## SEE ALSO
+
+bash(1), git(1)
+<http://github.com/gosuri/git-subsitute>
