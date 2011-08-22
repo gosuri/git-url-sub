@@ -16,11 +16,14 @@ Available subcommands are:
 
 ## URL REPLACEMENT
 
-usage: git sub url [hS] <old_url> <new_url>
+usage: git sub url [cs] <pattern> <replacement>
 
 OPTIONS:
   -h  Shows this message
-  -S  Silently executes
+  -c  Commit changes
+  -s  Silently executes
+
+NOTE: will not commit changes by default, run with -c option to commit changes
 
 
 ## SEE ALSO
