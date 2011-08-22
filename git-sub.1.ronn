@@ -1,13 +1,27 @@
-git-subsitute(1) - a git subsitution tool
-=========================================
+git-sub(1) - git substitution utility 
+=====================================
 
 ## SYNOPSIS
 
-git-subsitute url _old_url_ _new_url_
+git-sub <subcommand>
+
+Available subcommands are:
+
+	url		Recursively substitutes remote URLs for multiple repositories.
 
 ## DESCRIPTION
 
-'git-subsitute' is a tool to replace remote urls for multiple git repositories recursively
+'git-sub' is a utility to help you quickly substitute git configurations under multiple repositories recursively
+
+
+## URL REPLACEMENT
+
+usage: git sub url [hS] <old_url> <new_url>
+
+OPTIONS:
+  -h  Shows this message
+  -S  Silently executes
+
 
 ## SEE ALSO
 

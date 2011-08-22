@@ -38,7 +38,7 @@ usage: git sub <subcommand>
 
 Available subcommands are:
 
-   url       Recursively subsitutes remote URLs
+   url       Recursively substitute remote URLs
              for multiple repositories
 
 Try 'git sub <subcommand> help' for details.
