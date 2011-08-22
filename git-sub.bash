@@ -45,6 +45,12 @@ Try 'git sub <subcommand> help' for details.
 EOF
 }
 
+log() {
+  if [[ ! $SILENT ]]; then
+    echo $1
+  fi
+}
+
 main() {
   if [ $# -lt 1 ]; then
     usage
@@ -62,12 +68,15 @@ main() {
 
 cmd_url_usage() {
   cat << EOF
-usage: git sub url [hS] <old_url> <new_url>
+usage: git sub url [hSD] <old_url> <new_url>
+
+Will dry run by default, run with -C option to commit changes
 
 OPTIONS:
   -h  Shows this message
+  -C	Commit changes
   -S  Silently executes
-
+	
 EOF
 }
 
@@ -82,6 +91,9 @@ cmd_url() {
         ;;
       S)
         SILENT_FLAG=true
+        ;;
+      C)
+        COMMIT=true
         ;;
       ?)
         shift
@@ -102,35 +114,25 @@ cmd_url() {
   do
     for git_dir in $(echo $(ls -A $dir) | tr " " "\n")
     do
-      local prev_url=
-      local prev_branch=
       if [[ ${git_dir} == ".git" ]]; then
         cd $dir
-        local git_remote=($(git remote -v))
+        local git_remote_info=($(git remote -v))
         local index=0
+
         if [[ $(git remote -v | grep -c $SOURCE) > 0  ]]; then
-          for branch_info in ${git_remote[@]}
+          for branch_info in ${git_remote_info[@]}
           do
             if [[ "$branch_info" = "(fetch)" ]] || [[ "$branch_info" = "(push)" ]]
             then
-              local branch=${git_remote[$index-2]}
-              local url=${git_remote[$index-1]}
-
-              if [[ "$url" != "$prev_url" ]] && [[ "$branch_info" != "$prev_branch" ]]
-              then
-                echo -n "replace ($url -> $TARGET) for "$branch" under $dir?(Yn): "
-                read confirm
-                if [[ "$confirm" == "Y" ]]; then
-                  git remote set-url $branch $TARGET
-                  echo "remote url for $branch is now $TARGET"
-                else
-                  echo "remote url for $branch not updated"
-                fi
+              local mode=$branch_info
+              local url=${git_remote_info[$index-1]}
+              local branch=${git_remote_info[$index-2]}
+              if [[ $COMMIT ]]; then
+                git remote set-url $branch $TARGET
               fi
-            fi
-            ((index++))
-            local prev_url=$url
-            local prev_branch=$branch
+              log "$dir $url $branch $mode"
+           fi
+          ((index++))
           done
         fi
       fi
