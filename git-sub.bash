@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #
 # Copyright 2011 Greg Osuri <gosuri@gmail.com>
 #
@@ -24,13 +24,19 @@
 # enable debug mode
 if [ "$DEBUG" = "yes" ]
 then
-	set -x
+  set -x
 fi
 
 export GITSUB_DIR=$(dirname "$0")
 
 SUBCOMMAND_LIST=( url )
 WORKING_DIR=$(PWD)
+
+puts() {
+  if ! [[ $SILENT_FLAG ]]; then
+    echo "$1"
+  fi
+}
 
 usage() {
   cat << EOF
@@ -45,11 +51,6 @@ Try 'git sub <subcommand> help' for details.
 EOF
 }
 
-log() {
-  if [[ ! $SILENT ]]; then
-    echo $1
-  fi
-}
 
 main() {
   if [ $# -lt 1 ]; then
@@ -68,37 +69,40 @@ main() {
 
 cmd_url_usage() {
   cat << EOF
-usage: git sub url [hSD] <old_url> <new_url>
+usage: git sub url [cs] <old_url> <new_url>
 
-Will dry run by default, run with -C option to commit changes
+NOTE: will not commit changes by default, run with -c option to commit changes
 
 OPTIONS:
   -h  Shows this message
-  -C	Commit changes
-  -S  Silently executes
+  -c  Commit changes
+  -s  Silently executes
 	
 EOF
 }
 
 cmd_url() {
   # parse options
-  while getopts h:s OPTION
+  while getopts hsc OPTION
   do
     case $OPTION in
       h)
         cmd_url_usage
         exit 1
         ;;
-      S)
-        SILENT_FLAG=true
-        ;;
-      C)
+      c)
         COMMIT=true
         ;;
+      s)
+        SILENT_FLAG=true
+        ;;
       ?)
-        shift
+        cmd_url_usage
+        exit 1
+        ;;
     esac
   done
+  shift $((OPTIND-1))
 
   # check to see if we have both urls
   if [ $# -lt 2 ]
@@ -120,6 +124,7 @@ cmd_url() {
         local index=0
 
         if [[ $(git remote -v | grep -c $SOURCE) > 0  ]]; then
+          local changes_flag=true
           for branch_info in ${git_remote_info[@]}
           do
             if [[ "$branch_info" = "(fetch)" ]] || [[ "$branch_info" = "(push)" ]]
@@ -130,15 +135,24 @@ cmd_url() {
               if [[ $COMMIT ]]; then
                 git remote set-url $branch $TARGET
               fi
-              log "$dir $url $branch $mode"
-           fi
-          ((index++))
+              puts "$dir $url $branch $mode"
+            fi
+            ((index++))
           done
         fi
       fi
     done
   cd $WORKING_DIR
   done
+  if [[ $changes_flag ]]; then
+    puts ""
+    if [[ $COMMIT ]]; then
+      puts "Changes have been made to the above urls"
+    else
+      puts "NOTE: No changes have been made. Please run with -c flag to commit changes"
+      puts "git sub url -c $SOURCE $TARGET"
+    fi
+  fi
 }
 
 main "$@"
