@@ -26,4 +26,4 @@ OPTIONS:
 ## SEE ALSO
 
 bash(1), git(1)
-<http://github.com/gosuri/git-subsitute>
+<http://github.com/gosuri/git-sub>
