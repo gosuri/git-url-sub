@@ -8,7 +8,6 @@ mandir   = $(datadir)/man
 PROGRAM  = git-sub
 SOURCES  = git-sub.bash
 RONN     = ronn --date=2011-08-20 \
-					 --manual='Git Subsitute Manual' \
 					 --organization='Greg Osuri'
 
 all: $(PROGRAM)

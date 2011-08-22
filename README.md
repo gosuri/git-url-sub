@@ -16,8 +16,8 @@ substitution utility for git
 
 ### Subcommands
 
-* url:
-  Recursively substitute remote URLs for multiple repositories. Will not commit changes by default, run with -c option to commit changes
+    * url:
+    Recursively substitute remote URLs for multiple repositories. Will not commit changes by default, run with -c option to commit changes
 
 
 #### Example:
@@ -32,6 +32,8 @@ Replace all occurances of 'foo' in the remote url with 'bar'
 
 ## More help
 ------------
+Man pages at (http://gregosuri.com/git-sub)
+
     git sub help
     git sub <subcommand> help
 
