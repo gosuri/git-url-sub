@@ -1,32 +1,42 @@
-git-sub
-=======
+# git-sub
 
 substitution utility for git
 
-Installation
+## Installation
+
+    git clone git@github.com:gosuri/git-sub.git
+    cd git-sub
+    make
+    sudo make install
+
+
+## Usage
+
+    git sub <subcommand>
+
+### Subcommands
+
+    * url:
+    Recursively substitute remote URLs for multiple repositories. Will not commit changes by default, run with -c option to commit changes
+
+
+#### Example:
+
+Replace all occurances of 'foo' in the remote url with 'bar'
+
+    $ git sub url foo bar
+
+    git@github.com:foo/myproject.git -> git@github.com:bar/myproject.git
+
+
+
+## More help
 ------------
+    git sub help
+    git sub <subcommand> help
 
-		git clone git@github.com:gosuri/git-sub.git
-		cd git-sub
-		make
-		sudo make install
+## License
 
+git-sub is Copyright (C) 2011 [Greg Osuri](http://gregosuri.com)<br>
+See the file [LICENSE](http://github.com/gosuri/git-sub/master/LICENSE) for information of licensing and distribution.
 
-Basic Usage
------------
-
-		git sub <subcommand>
-
-*Subcommands*
-
-url -  will recursively substitute remote URLs for multiple repositories.
-
-Example:
-
-		git sub url git@github.com:gosuri/git-sub.git git@github.com:gridbag/git-sub.git
-
-
-More help
----------
-		git sub help
-		git sub <subcommand> help
