@@ -7,26 +7,33 @@ git-sub <subcommand>
 
 Available subcommands are:
 
-	url		Recursively substitutes remote URLs for multiple repositories.
+  * url:
+  Recursively substitutes remote URLs for multiple repositories based on pattern.
 
 ## DESCRIPTION
 
 'git-sub' is a utility to help you quickly substitute git configurations under multiple repositories recursively
 
 
-## URL REPLACEMENT
 
-usage: git sub url [cs] <pattern> <replacement>
+## URL
 
-OPTIONS:
-  -h  Shows this message
-  -c  Commit changes
-  -s  Silently executes
+### SYNOPSIS
+git sub url [[options]] <pattern> <replacement>
 
-NOTE: will not commit changes by default, run with -c option to commit changes
+### OPTIONS
+  * -c:
+  Commit changes
+  * -s:
+  Silently executes
 
+### DESCRIPTION
+  Recursively substitutes remote URLs for multiple repositories based on pattern. Will not commit changes by default, run with -c option to commit changes
+
+## COPYRIGHT
+
+Copyright (c) 2011 Greg Osuri <http://gregosuri.com>
 
 ## SEE ALSO
 
-bash(1), git(1)
-<http://github.com/gosuri/git-sub>
+bash(1), git(1), <http://github.com/gosuri/git-sub>

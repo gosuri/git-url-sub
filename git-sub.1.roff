@@ -1,16 +1,44 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "GIT\-SUBSITUTE" "1" "August 2011" "" ""
+.TH "GIT\-SUB" "1" "August 2011" "" ""
 .
 .SH "NAME"
-\fBgit\-subsitute\fR \- a git subsitution tool
+\fBgit\-sub\fR \- git substitution utility
 .
 .SH "SYNOPSIS"
-git\-subsitute url \fIold_url\fR \fInew_url\fR
+git\-sub \fIsubcommand\fR
+.
+.P
+Available subcommands are:
+.
+.TP
+url
+Recursively substitutes remote URLs for multiple repositories based on pattern\.
 .
 .SH "DESCRIPTION"
-\'git\-subsitute\' is a tool to replace remote urls for multiple git repositories recursively
+\'git\-sub\' is a utility to help you quickly substitute git configurations under multiple repositories recursively
+.
+.SH "URL"
+.
+.SS "SYNOPSIS"
+git sub url [\fIoptions\fR] \fIpattern\fR \fIreplacement\fR
+.
+.SS "OPTIONS"
+.
+.TP
+\-c
+Commit changes
+.
+.TP
+\-s
+Silently executes
+.
+.SS "DESCRIPTION"
+Recursively substitutes remote URLs for multiple repositories based on pattern\. Will not commit changes by default, run with \-c option to commit changes
+.
+.SH "COPYRIGHT"
+Copyright (c) 2011 Greg Osuri \fIhttp://gregosuri\.com\fR
 .
 .SH "SEE ALSO"
-bash(1), git(1) \fIhttp://github\.com/gosuri/git\-subsitute\fR
+bash(1), git(1), \fIhttp://github\.com/gosuri/git\-sub\fR
