@@ -69,15 +69,14 @@ main() {
 
 cmd_url_usage() {
   cat << EOF
-usage: git sub url [cs] <old_url> <new_url>
-
-NOTE: will not commit changes by default, run with -c option to commit changes
+usage: git sub url [cs] <pattern> <replacement>
 
 OPTIONS:
   -h  Shows this message
   -c  Commit changes
   -s  Silently executes
-	
+
+NOTE: will not commit changes by default, run with -c option to commit changes
 EOF
 }
 
@@ -111,8 +110,8 @@ cmd_url() {
     exit 1
   fi
 
-  local SOURCE=$1
-  local TARGET=$2
+  local PATTERN=$1
+  local REPLACEMENT=$2
 
   for dir in $(echo $(find . -type dir | grep -v .git) | tr " " "\n")
   do
@@ -123,7 +122,7 @@ cmd_url() {
         local git_remote_info=($(git remote -v))
         local index=0
 
-        if [[ $(git remote -v | grep -c $SOURCE) > 0  ]]; then
+        if [[ $(git remote -v | grep -c $PATTERN) > 0 ]]; then
           local changes_flag=true
           for branch_info in ${git_remote_info[@]}
           do
@@ -132,10 +131,11 @@ cmd_url() {
               local mode=$branch_info
               local url=${git_remote_info[$index-1]}
               local branch=${git_remote_info[$index-2]}
+              local new_url=$(awk "BEGIN {str=\"$url\";sub(/$PATTERN/,\"$REPLACEMENT\",str); print str}")
               if [[ $COMMIT ]]; then
-                git remote set-url $branch $TARGET
+                git remote set-url $branch $new_url
               fi
-              puts "$dir $url $branch $mode"
+              puts "$dir $branch $mode $url -> $new_url"
             fi
             ((index++))
           done
@@ -150,7 +150,7 @@ cmd_url() {
       puts "Changes have been made to the above urls"
     else
       puts "NOTE: No changes have been made. Please run with -c flag to commit changes"
-      puts "git sub url -c $SOURCE $TARGET"
+      puts "git sub url -c $PATTERN $REPLACEMENT"
     fi
   fi
 }
