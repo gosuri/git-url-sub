@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #
 # Copyright 2011 Greg Osuri <gosuri@gmail.com>
 #
@@ -24,13 +24,19 @@
 # enable debug mode
 if [ "$DEBUG" = "yes" ]
 then
-	set -x
+  set -x
 fi
 
 export GITSUB_DIR=$(dirname "$0")
 
 SUBCOMMAND_LIST=( url )
 WORKING_DIR=$(PWD)
+
+puts() {
+  if ! [[ $SILENT_FLAG ]]; then
+    echo "$1"
+  fi
+}
 
 usage() {
   cat << EOF
@@ -44,6 +50,7 @@ Available subcommands are:
 Try 'git sub <subcommand> help' for details.
 EOF
 }
+
 
 main() {
   if [ $# -lt 1 ]; then
@@ -62,31 +69,40 @@ main() {
 
 cmd_url_usage() {
   cat << EOF
-usage: git sub url [hS] <old_url> <new_url>
+usage: git sub url [cs] <old_url> <new_url>
+
+NOTE: will not commit changes by default, run with -c option to commit changes
 
 OPTIONS:
   -h  Shows this message
-  -S  Silently executes
-
+  -c  Commit changes
+  -s  Silently executes
+	
 EOF
 }
 
 cmd_url() {
   # parse options
-  while getopts h:s OPTION
+  while getopts hsc OPTION
   do
     case $OPTION in
       h)
         cmd_url_usage
         exit 1
         ;;
-      S)
+      c)
+        COMMIT=true
+        ;;
+      s)
         SILENT_FLAG=true
         ;;
       ?)
-        shift
+        cmd_url_usage
+        exit 1
+        ;;
     esac
   done
+  shift $((OPTIND-1))
 
   # check to see if we have both urls
   if [ $# -lt 2 ]
@@ -102,41 +118,41 @@ cmd_url() {
   do
     for git_dir in $(echo $(ls -A $dir) | tr " " "\n")
     do
-      local prev_url=
-      local prev_branch=
       if [[ ${git_dir} == ".git" ]]; then
         cd $dir
-        local git_remote=($(git remote -v))
+        local git_remote_info=($(git remote -v))
         local index=0
+
         if [[ $(git remote -v | grep -c $SOURCE) > 0  ]]; then
-          for branch_info in ${git_remote[@]}
+          local changes_flag=true
+          for branch_info in ${git_remote_info[@]}
           do
             if [[ "$branch_info" = "(fetch)" ]] || [[ "$branch_info" = "(push)" ]]
             then
-              local branch=${git_remote[$index-2]}
-              local url=${git_remote[$index-1]}
-
-              if [[ "$url" != "$prev_url" ]] && [[ "$branch_info" != "$prev_branch" ]]
-              then
-                echo -n "replace ($url -> $TARGET) for "$branch" under $dir?(Yn): "
-                read confirm
-                if [[ "$confirm" == "Y" ]]; then
-                  git remote set-url $branch $TARGET
-                  echo "remote url for $branch is now $TARGET"
-                else
-                  echo "remote url for $branch not updated"
-                fi
+              local mode=$branch_info
+              local url=${git_remote_info[$index-1]}
+              local branch=${git_remote_info[$index-2]}
+              if [[ $COMMIT ]]; then
+                git remote set-url $branch $TARGET
               fi
+              puts "$dir $url $branch $mode"
             fi
             ((index++))
-            local prev_url=$url
-            local prev_branch=$branch
           done
         fi
       fi
     done
   cd $WORKING_DIR
   done
+  if [[ $changes_flag ]]; then
+    puts ""
+    if [[ $COMMIT ]]; then
+      puts "Changes have been made to the above urls"
+    else
+      puts "NOTE: No changes have been made. Please run with -c flag to commit changes"
+      puts "git sub url -c $SOURCE $TARGET"
+    fi
+  fi
 }
 
 main "$@"
