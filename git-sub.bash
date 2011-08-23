@@ -80,6 +80,25 @@ NOTE: will not commit changes by default, run with -c option to commit changes
 EOF
 }
 
+escape_url() {
+  echo $1 | awk '
+    BEGIN {
+      FS = ""
+    }
+    {
+      result = ""
+      for (i=1; i<=NF; i++) {
+        if ($i == "." || $i == "/") {
+          result = (result "" (result = "\\"))
+        }
+        result = (result "" (result = $i))
+      }
+      print result
+    }
+  '
+}
+
+
 cmd_url() {
   # parse options
   while getopts hsc OPTION
@@ -131,7 +150,13 @@ cmd_url() {
               local mode=$branch_info
               local url=${git_remote_info[$index-1]}
               local branch=${git_remote_info[$index-2]}
-              local new_url=$(awk "BEGIN {str=\"$url\";sub(/$PATTERN/,\"$REPLACEMENT\",str); print str}")
+              local escaped=$(escape_url $PATTERN)
+              local new_url=$(awk "
+                BEGIN { 
+                  str=\"$url\"
+                  sub(/$escaped/,\"$REPLACEMENT\",str)
+                  print str}
+              ")
               if [[ $COMMIT ]]; then
                 git remote set-url $branch $new_url
               fi
