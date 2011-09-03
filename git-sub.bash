@@ -38,6 +38,12 @@ puts() {
   fi
 }
 
+execute_git() {
+  local git_dir=$1
+  shift
+  git --git-dir=$git_dir/.git --work-tree=$git_dir $*
+}
+
 usage() {
   cat << EOF
 usage: git sub <subcommand>
@@ -134,40 +140,35 @@ cmd_url() {
 
   for dir in $(echo $(find . -type dir | grep -v .git) | tr " " "\n")
   do
-    for git_dir in $(echo $(ls -A $dir) | tr " " "\n")
-    do
-      if [[ ${git_dir} == ".git" ]]; then
-        cd $dir
-        local git_remote_info=($(git remote -v))
-        local index=0
-
-        if [[ $(git remote -v | grep -c $PATTERN) > 0 ]]; then
-          local changes_flag=true
-          for branch_info in ${git_remote_info[@]}
-          do
-            if [[ "$branch_info" = "(fetch)" ]] || [[ "$branch_info" = "(push)" ]]
-            then
-              local mode=$branch_info
-              local url=${git_remote_info[$index-1]}
-              local branch=${git_remote_info[$index-2]}
-              local escaped=$(escape_url $PATTERN)
-              local new_url=$(awk "
-                BEGIN { 
-                  str=\"$url\"
-                  sub(/$escaped/,\"$REPLACEMENT\",str)
-                  print str}
-              ")
-              if [[ $COMMIT ]]; then
-                git remote set-url $branch $new_url
-              fi
-              puts "$dir $branch $mode $url -> $new_url"
+    if [[ $(execute_git $dir status 2> /dev/null) != "" ]]; then
+      local git_remote_info=($(execute_git $dir remote -v))
+      local index=0
+      if [[ $(echo ${git_remote_info[@]} | grep -c $PATTERN) > 0 ]]; then
+        local changes_flag=true
+        for branch_info in ${git_remote_info[@]}
+        do
+          if [[ "$branch_info" = "(fetch)" ]] || [[ "$branch_info" = "(push)" ]]
+          then
+            local mode=$branch_info
+            local url=${git_remote_info[$index-1]}
+            local branch=${git_remote_info[$index-2]}
+            local escaped=$(escape_url $PATTERN)
+            local new_url=$(awk "
+              BEGIN { 
+                str=\"$url\"
+                sub(/$escaped/,\"$REPLACEMENT\",str)
+                print str}
+            ")
+            if [[ $COMMIT ]]; then
+              git remote set-url $branch $new_url
             fi
-            ((index++))
-          done
-        fi
+            puts "$dir $branch $mode $url -> $new_url"
+          fi
+          ((index++))
+        done
       fi
-    done
-  cd $WORKING_DIR
+    fi
+
   done
   if [[ $changes_flag ]]; then
     puts ""
