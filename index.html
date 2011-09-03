@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv='content-type' value='text/html;charset=utf8'>
   <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
-  <title>git-sub(1) - git substitution utility </title>
+  <title>git-url-sub(1) - git url substitution utility </title>
   <style type='text/css' media='all'>
   /* style: man */
   body#manpage {margin:0}
@@ -56,42 +56,24 @@
     <a href="#NAME">NAME</a>
     <a href="#SYNOPSIS">SYNOPSIS</a>
     <a href="#DESCRIPTION">DESCRIPTION</a>
-    <a href="#URL">URL</a>
     <a href="#COPYRIGHT">COPYRIGHT</a>
     <a href="#SEE-ALSO">SEE ALSO</a>
   </div>
 
   <ol class='man-decor man-head man head'>
-    <li class='tl'>git-sub(1)</li>
+    <li class='tl'>git-url-sub(1)</li>
     <li class='tc'></li>
-    <li class='tr'>git-sub(1)</li>
+    <li class='tr'>git-url-sub(1)</li>
   </ol>
 
   <h2 id="NAME">NAME</h2>
 <p class="man-name">
-  <code>git-sub</code> - <span class="man-whatis">git substitution utility </span>
+  <code>git-url-sub</code> - <span class="man-whatis">git url substitution utility </span>
 </p>
 
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
-<p>git-sub <var>subcommand</var></p>
-
-<p>Available subcommands are:</p>
-
-<dl>
-<dt class="flush">url</dt><dd>Recursively substitutes remote URLs for multiple repositories based on pattern.</dd>
-</dl>
-
-
-<h2 id="DESCRIPTION">DESCRIPTION</h2>
-
-<p>'git-sub' is a utility to help you quickly substitute git configurations under multiple repositories recursively</p>
-
-<h2 id="URL">URL</h2>
-
-<h3 id="SYNOPSIS">SYNOPSIS</h3>
-
-<p>git sub url [<a href="#OPTIONS" title="OPTIONS" data-bare-link="true">options</a>] <var>pattern</var> <var>replacement</var></p>
+<p>git-url-sub [<a href="#OPTIONS" title="OPTIONS" data-bare-link="true">options</a>] <var>pattern</var> <var>replacement</var></p>
 
 <h3 id="OPTIONS">OPTIONS</h3>
 
@@ -101,9 +83,9 @@
 </dl>
 
 
-<h3 id="DESCRIPTION">DESCRIPTION</h3>
+<h2 id="DESCRIPTION">DESCRIPTION</h2>
 
-<p>  Recursively substitutes remote URLs for multiple repositories based on pattern. Will not commit changes by default, run with -c option to commit changes</p>
+<p>  Recursively substitutes remote URLs for multiple repositories based on pattern. Will run dry by default, execute with -c option to commit changes.</p>
 
 <h2 id="COPYRIGHT">COPYRIGHT</h2>
 
@@ -111,13 +93,13 @@
 
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
-<p><span class="man-ref">bash<span class="s">(1)</span></span>, <span class="man-ref">git<span class="s">(1)</span></span>, <a href="http://github.com/gosuri/git-sub" data-bare-link="true">http://github.com/gosuri/git-sub</a></p>
+<p><span class="man-ref">bash<span class="s">(1)</span></span>, <span class="man-ref">git<span class="s">(1)</span></span>, <a href="http://github.com/gosuri/git-url-sub" data-bare-link="true">http://github.com/gosuri/git-url-sub</a></p>
 
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'>Greg Osuri</li>
     <li class='tc'>August 2011</li>
-    <li class='tr'>git-sub(1)</li>
+    <li class='tr'>git-url-sub(1)</li>
   </ol>
 
   </div>
