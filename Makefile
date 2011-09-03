@@ -5,10 +5,10 @@ execdir  = $(PREFIX)/bin
 datadir  = $(PREFIX)/share
 mandir   = $(datadir)/man
 
-PROGRAM  = git-sub
-SOURCES  = git-sub.bash
+PROGRAM  = git-url-sub
+SOURCES  = git-url-sub.bash
 RONN     = ronn --date=2011-08-20 \
-					 --organization='Greg Osuri'
+           --organization='Greg Osuri'
 
 all: $(PROGRAM)
 
