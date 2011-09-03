@@ -4,7 +4,7 @@ Recursively substitute remote URLs for multiple repositories. Will not commit ch
 
 ## Installation
 
-    git clone git@github.com:gosuri/git-url-sub.git
+    git clone git://github.com/gosuri/git-url-sub.git
     cd git-url-sub
     sudo make install
 
