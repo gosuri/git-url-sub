@@ -128,7 +128,7 @@ main() {
                 print str}
             ")
             if [[ $COMMIT ]]; then
-              git remote set-url $branch $new_url
+              execute_git $dir remote set-url $branch $new_url
             fi
             puts "$dir $branch $mode $url -> $new_url"
           fi
