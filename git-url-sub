@@ -27,10 +27,6 @@ then
   set -x
 fi
 
-export GITSUB_DIR=$(dirname "$0")
-
-SUBCOMMAND_LIST=( url )
-WORKING_DIR=$(PWD)
 
 puts() {
   if ! [[ $SILENT_FLAG ]]; then
@@ -44,38 +40,10 @@ execute_git() {
   git --git-dir=$git_dir/.git --work-tree=$git_dir $*
 }
 
+
 usage() {
   cat << EOF
-usage: git sub <subcommand>
-
-Available subcommands are:
-
-   url       Recursively substitute remote URLs
-             for multiple repositories
-
-Try 'git sub <subcommand> help' for details.
-EOF
-}
-
-
-main() {
-  if [ $# -lt 1 ]; then
-    usage
-    exit 1
-  fi
-
-  SUBCOMMAND="$1"; shift
-
-  case "${SUBCOMMAND_LIST[@]}" in
-    "$SUBCOMMAND") cmd_$SUBCOMMAND "$@" ;;
-                *) usage; exit 1 ;;
-  esac
-}
-
-
-cmd_url_usage() {
-  cat << EOF
-usage: git sub url [cs] <pattern> <replacement>
+usage: git url-sub [cs] <pattern> <replacement>
 
 OPTIONS:
   -h  Shows this message
@@ -105,13 +73,13 @@ escape_url() {
 }
 
 
-cmd_url() {
+main() {
   # parse options
   while getopts hsc OPTION
   do
     case $OPTION in
       h)
-        cmd_url_usage
+        usage
         exit 1
         ;;
       c)
@@ -121,7 +89,7 @@ cmd_url() {
         SILENT_FLAG=true
         ;;
       ?)
-        cmd_url_usage
+        usage
         exit 1
         ;;
     esac
@@ -131,7 +99,7 @@ cmd_url() {
   # check to see if we have both urls
   if [ $# -lt 2 ]
   then
-    cmd_url_usage
+    usage
     exit 1
   fi
 
@@ -154,7 +122,7 @@ cmd_url() {
             local branch=${git_remote_info[$index-2]}
             local escaped=$(escape_url $PATTERN)
             local new_url=$(awk "
-              BEGIN { 
+              BEGIN {
                 str=\"$url\"
                 sub(/$escaped/,\"$REPLACEMENT\",str)
                 print str}

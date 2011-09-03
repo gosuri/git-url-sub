@@ -1,0 +1,23 @@
+git-url-sub(1) - git url substitution utility 
+=============================================
+
+## SYNOPSIS
+
+git-url-sub [[options]] <pattern> <replacement>
+
+### OPTIONS
+  * -c:
+  Commit changes
+  * -s:
+  Silently executes
+
+## DESCRIPTION
+  Recursively substitutes remote URLs for multiple repositories based on pattern. Will run dry by default, execute with -c option to commit changes.
+
+## COPYRIGHT
+
+Copyright (c) 2011 Greg Osuri <http://gregosuri.com>
+
+## SEE ALSO
+
+bash(1), git(1), <http://github.com/gosuri/git-url-sub>
