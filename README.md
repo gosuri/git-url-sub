@@ -2,7 +2,11 @@
 
 Recursively substitute remote URLs for multiple repositories. Will not commit changes by default, run with -c option to commit changes
 
-## Installation
+## Installation (homebrew)
+
+    brew install git-url-sub
+
+## Installation (source)
 
     git clone git://github.com/gosuri/git-url-sub.git
     cd git-url-sub
